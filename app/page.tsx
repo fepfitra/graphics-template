@@ -7,6 +7,7 @@ export default function Home() {
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     bezier(canvas, 100, 100, 100, 200, 300, 100, 400, 200)
     // const ctx = canvas.getContext('2d');
     // if (ctx) {
@@ -31,10 +32,10 @@ export default function Home() {
 // bezier using getImageData and putImageData
 function bezier(
   canvas: HTMLCanvasElement,
-  x0: number, y0: number, 
-  x1: number, y1: number, 
-  x2: number, y2: number, 
-  x3: number, y3: number
+  p1x: number, p1y: number, 
+  p2x: number, p2y: number, 
+  p3x: number, p3y: number, 
+  p4x: number, p4y: number
 ) {
   //setup data
   const ctx = canvas.getContext('2d');
@@ -52,8 +53,8 @@ function bezier(
     const u2 = u * i;
 
     //rumus bezier
-    const x = Math.pow(1 - u2, 3) * x0 + 3 * Math.pow(1 - u2, 2) * u2 * x1 + 3 * (1 - u2) * Math.pow(u2, 2) * x2 + Math.pow(u2, 3) * x3;
-    const y = Math.pow(1 - u2, 3) * y0 + 3 * Math.pow(1 - u2, 2) * u2 * y1 + 3 * (1 - u2) * Math.pow(u2, 2) * y2 + Math.pow(u2, 3) * y3;
+    const x = Math.pow(1 - u2, 3) * p1x + 3 * Math.pow(1 - u2, 2) * u2 * p2x + 3 * (1 - u2) * Math.pow(u2, 2) * p3x + Math.pow(u2, 3) * p4x;
+    const y = Math.pow(1 - u2, 3) * p1y + 3 * Math.pow(1 - u2, 2) * u2 * p2y + 3 * (1 - u2) * Math.pow(u2, 2) * p3y + Math.pow(u2, 3) * p4y;
 
     //menggambar pixel
     const index = Math.floor(y) * width + Math.floor(x);
