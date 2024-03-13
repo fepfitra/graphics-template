@@ -12,6 +12,7 @@ export default function Home() {
     const pen = new Pen(canvas);
     pen.bezier(100, 100, 100, 200, 300, 100, 400, 200);
     pen.line(100, 100, 400, 200);
+    pen.triangle(400, 400, 400, 200, 100, 200);
   }, []);
 
   return (
