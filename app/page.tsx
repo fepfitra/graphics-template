@@ -48,8 +48,12 @@ function bezier(
   const height = canvas.height;
 
   //algoritma aseli
-  const u = 1 / 1000;
-  for (let i = 0; i < 1000; i++) {
+  const len = Math.sqrt(Math.pow(p1x - p2x, 2) + Math.pow(p1y - p2y, 2)) 
+            + Math.sqrt(Math.pow(p2x - p3x, 2) + Math.pow(p2y - p3y, 2)) 
+            + Math.sqrt(Math.pow(p3x - p4x, 2) + Math.pow(p3y - p4y, 2));
+  console.log(len);
+  const u = 1 / len;
+  for (let i = 0; i < len; i++) {
     const u2 = u * i;
 
     //rumus bezier
