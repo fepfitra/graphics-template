@@ -76,6 +76,70 @@ class Pen {
     this.line(x2, y2, x3, y3);
     this.line(x3, y3, x1, y1);
   }
+
+  public rectangle(x1: number, y1: number, x2: number, y2: number) {
+    this.line(x1, y1, x2, y1);
+    this.line(x2, y1, x2, y2);
+    this.line(x2, y2, x1, y2);
+    this.line(x1, y2, x1, y1);
+  }
+
+  public sines({
+    amplitude,
+    frequency,
+    xmin,
+    xmax,
+  }:{
+    amplitude: number,
+    frequency: number,
+    xmin: number,
+    xmax: number,
+    }) {
+    for (let x = xmin; x < xmax; x=x+0.005) {
+      const y = amplitude * Math.sin(frequency * x)
+      this.windowToWiewport({
+        xwmin: xmin,
+        ywmin: -amplitude,
+        xwmax: xmax,
+        ywmax: amplitude,
+        xvmin: 0,
+        yvmin: 0,
+        xvmax: 600,
+        yvmax: 600,
+        xw: x,
+        yw: y,
+      });
+    }
+  }
+
+  public windowToWiewport({
+    xwmin,
+    ywmin,
+    xwmax,
+    ywmax,
+    xvmin,
+    yvmin,
+    xvmax,
+    yvmax,
+    xw,
+    yw,
+  }:{
+    xwmin: number,
+    ywmin: number,
+    xwmax: number,
+    ywmax: number,
+    xvmin: number,
+    yvmin: number,
+    xvmax: number,
+    yvmax: number,
+    xw: number,
+    yw: number,
+    
+  }) {
+    const xv = xvmin + (xw - xwmin) * (xvmax - xvmin) / (xwmax - xwmin);
+    const yv = yvmin + (yw - ywmin) * (yvmax - yvmin) / (ywmax - ywmin);
+    this.point(Math.round(xv), Math.round(yv))
+  }
   
 }
 
