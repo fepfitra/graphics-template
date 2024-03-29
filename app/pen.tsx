@@ -52,15 +52,15 @@ class Pen {
   }
 
   public bezier(
-    p1x: number, p1y: number, 
-    p2x: number, p2y: number, 
-    p3x: number, p3y: number, 
+    p1x: number, p1y: number,
+    p2x: number, p2y: number,
+    p3x: number, p3y: number,
     p4x: number, p4y: number
   ) {
     //algoritma aseli
-    const len = Math.sqrt(Math.pow(p1x - p2x, 2) + Math.pow(p1y - p2y, 2)) 
-              + Math.sqrt(Math.pow(p2x - p3x, 2) + Math.pow(p2y - p3y, 2)) 
-              + Math.sqrt(Math.pow(p3x - p4x, 2) + Math.pow(p3y - p4y, 2));
+    const len = Math.sqrt(Math.pow(p1x - p2x, 2) + Math.pow(p1y - p2y, 2))
+      + Math.sqrt(Math.pow(p2x - p3x, 2) + Math.pow(p2y - p3y, 2))
+      + Math.sqrt(Math.pow(p3x - p4x, 2) + Math.pow(p3y - p4y, 2));
     const u = 1 / len;
     for (let i = 0; i < len; i++) {
       const u2 = u * i;
@@ -89,58 +89,66 @@ class Pen {
     frequency,
     xmin,
     xmax,
-  }:{
+  }: {
     amplitude: number,
     frequency: number,
     xmin: number,
     xmax: number,
-    }) {
-    for (let x = xmin; x < xmax; x=x+0.005) {
+  }) {
+    for (let x = xmin; x < xmax; x = x + 0.005) {
       const y = amplitude * Math.sin(frequency * x)
-      this.windowToWiewport({
-        xwmin: xmin,
-        ywmin: -amplitude,
-        xwmax: xmax,
-        ywmax: amplitude,
-        xvmin: 0,
-        yvmin: 0,
-        xvmax: 600,
-        yvmax: 600,
-        xw: x,
-        yw: y,
-      });
+      const dot = this.windowToWiewport({
+        xmin: xmin,
+        ymin: -amplitude,
+        xmax: xmax,
+        ymax: amplitude,
+      }, {
+        xmin: 0,
+        ymin: 0,
+        xmax: this.width,
+        ymax: this.height,
+      }, x, y);
+      this.point(dot.x, dot.y);
     }
   }
 
-  public windowToWiewport({
-    xwmin,
-    ywmin,
-    xwmax,
-    ywmax,
-    xvmin,
-    yvmin,
-    xvmax,
-    yvmax,
-    xw,
-    yw,
-  }:{
-    xwmin: number,
-    ywmin: number,
-    xwmax: number,
-    ywmax: number,
-    xvmin: number,
-    yvmin: number,
-    xvmax: number,
-    yvmax: number,
-    xw: number,
-    yw: number,
-    
-  }) {
-    const xv = xvmin + (xw - xwmin) * (xvmax - xvmin) / (xwmax - xwmin);
-    const yv = yvmin + (yw - ywmin) * (yvmax - yvmin) / (ywmax - ywmin);
-    this.point(Math.round(xv), Math.round(yv))
+  public windowToWiewport(
+    windowSize: {
+      xmin: number,
+      ymin: number,
+      xmax: number,
+      ymax: number,
+
+    }, viewportSize: {
+
+      xmin: number,
+      ymin: number,
+      xmax: number,
+      ymax: number,
+    }, x: number, y: number) {
+    const xv = viewportSize.xmin + (x - windowSize.xmin) * (viewportSize.xmax - viewportSize.xmin) / (windowSize.xmax - windowSize.xmin);
+    const yv = viewportSize.ymin + (y - windowSize.ymin) * (viewportSize.ymax - viewportSize.ymin) / (windowSize.ymax - windowSize.ymin);
+    return { x: xv, y: yv }
   }
-  
+
+  public polygon(...points: { x: number, y: number }[]) {
+    for (let i = 0; i < points.length; i++) {
+      const p1 = points[i];
+      const p2 = points[(i + 1) % points.length];
+      this.line(Math.round(p1.x), Math.round(p1.y), Math.round(p2.x), Math.round(p2.y));
+    }
+  }
+
+  public translate(dot: { x: number, y: number }, dx: number, dy: number) {
+    const x = dot.x + dx;
+    const y = dot.y + dy;
+    return { x, y }
+  }
+  public rotate(dot: { x: number, y: number }, angle: number) {
+    const x = dot.x * Math.cos(angle) - dot.y * Math.sin(angle);
+    const y = dot.x * Math.sin(angle) + dot.y * Math.cos(angle);
+    return { x, y }
+  }
 }
 
 export default Pen;
