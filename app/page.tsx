@@ -9,16 +9,10 @@ export default function Home() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const pen = new Pen(canvas);
-    // pen.sines({
-    //   amplitude: 1,
-    //   frequency: 1,
-    //   xmin: -Math.PI,
-    //   xmax: Math.PI,
-    // })
     const windowSize = {
-      xmin: -10,
-      ymin: -10,
-      xmax: 10,
+      xmin: -5,
+      ymin: 0,
+      xmax: 5,
       ymax: 10,
     }
     const viewportSize = {
@@ -28,34 +22,13 @@ export default function Home() {
       ymax: 600,
     }
 
-    const diamond = [
-      { x: 1, y: 3 },
-      { x: 2, y: 3 },
-      { x: 3, y: 2 },
-      { x: 4, y: 1 },
-      { x: 3, y: 0 },
-      { x: 2, y: -1 },
-      { x: 1, y: -2 },
-      { x: 0, y: -3 },
-      { x: -1, y: -2 },
-      { x: -2, y: -1 },
-      { x: -3, y: 0 },
-      { x: -4, y: 1 },
-      { x: -3, y: 2 },
-      { x: -2, y: 3 },
-      { x: -1, y: 3 },
-    ];
-
-
-    const vPolygon = diamond.map(({ x, y }) => {
-      let dot = { x, y }
-      dot = pen.scale(dot, 2);
-      dot = pen.rotate(dot, 45 * Math.PI / 180);
-      dot = pen.windowToWiewport(windowSize, viewportSize, dot.x, -dot.y)
-      return dot;
-    });
-
-    pen.polygon(...vPolygon);
+    let line = {
+      x0: -7,
+      y0: -1.5,
+      x1: 7,
+      y1: 9,
+    }
+    pen.clipLine(windowSize, viewportSize, line);
   }, []);
 
   return (

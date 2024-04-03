@@ -150,10 +150,83 @@ class Pen {
     return { x, y }
   }
 
-  public scale(dot: { x: number, y: number }, scale:number) {
+  public scale(dot: { x: number, y: number }, scale: number) {
     const x = dot.x * scale;
     const y = dot.y * scale;
     return { x, y }
+  }
+
+  public clipLine(windowSize: {
+    xmin: number,
+    ymin: number,
+    xmax: number,
+    ymax: number,
+  }, viewportSize: {
+    xmin: number,
+    ymin: number,
+    xmax: number,
+    ymax: number,
+  }, line: { x0: number, y0: number, x1: number, y1: number }) {
+    const INSIDE = 0;
+    const LEFT = 1;
+    const RIGHT = 2;
+    const BOTTOM = 4;
+    const TOP = 8;
+
+    let { x0, y0, x1, y1 } = line;
+
+    const ComputeOutCode = (x: number, y: number) => {
+      let code = INSIDE;
+      if (x < windowSize.xmin) code |= LEFT;
+      if (x > windowSize.xmax) code |= RIGHT;
+      if (y < windowSize.ymin) code |= BOTTOM;
+      if (y > windowSize.ymax) code |= TOP;
+      return code;
+    }
+
+    let outcode0 = ComputeOutCode(x0, y0);
+    let outcode1 = ComputeOutCode(x1, y1);
+    let accept = false;
+
+    while (true) {
+      if (!(outcode0 | outcode1)) {
+        accept = true;
+        break;
+      } else if (outcode0 & outcode1) {
+        break;
+      } else {
+        let x, y;
+        let outcodeOut = outcode1 > outcode0 ? outcode1 : outcode0;
+
+        if (outcodeOut & TOP) {
+          x = x0 + (x1 - x0) * (windowSize.ymax - y0) / (y1 - y0);
+          y = windowSize.ymax;
+        } else if (outcodeOut & BOTTOM) {
+          x = x0 + (x1 - x0) * (windowSize.ymin - y0) / (y1 - y0);
+          y = windowSize.ymin;
+        } else if (outcodeOut & RIGHT) {
+          y = y0 + (y1 - y0) * (windowSize.xmax - x0) / (x1 - x0);
+          x = windowSize.xmax;
+        } else if (outcodeOut & LEFT) {
+          y = y0 + (y1 - y0) * (windowSize.xmin - x0) / (x1 - x0);
+          x = windowSize.xmin;
+        }
+
+        if (outcodeOut === outcode0) {
+          x0 = x;
+          y0 = y;
+          outcode0 = ComputeOutCode(x0, y0);
+        } else {
+          x1 = x;
+          y1 = y;
+          outcode1 = ComputeOutCode(x1, y1);
+        }
+      }
+    }
+
+    let dot1 = this.windowToWiewport(windowSize, viewportSize, x0, windowSize.ymax - y0);
+    let dot2 = this.windowToWiewport(windowSize, viewportSize, x1, windowSize.ymax - y1);
+    this.line(dot1.x, dot1.y, dot2.x, dot2.y);
   }
 }
 
