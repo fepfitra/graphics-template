@@ -28,30 +28,30 @@ export default function Home() {
       ymax: 600,
     }
 
-    const moaiSilhouette = [
-      { x: 0, y: 4 },
-      { x: 1, y: 4 },
-      { x: 1.5, y: 3 },
-      { x: 1.5, y: -2 },
-      { x: 2.5, y: -3 },
-      { x: 2.5, y: -3.5 },
-      { x: 2, y: -4 },
-      { x: 1, y: -4 },
+    const diamond = [
+      { x: 1, y: 3 },
+      { x: 2, y: 3 },
+      { x: 3, y: 2 },
+      { x: 4, y: 1 },
+      { x: 3, y: 0 },
+      { x: 2, y: -1 },
+      { x: 1, y: -2 },
       { x: 0, y: -3 },
-      { x: -1, y: -4 },
-      { x: -2, y: -4 },
-      { x: -2.5, y: -3.5 },
-      { x: -2.5, y: -3 },
-      { x: -1.5, y: -2 },
-      { x: -1.5, y: 3 },
-      { x: -1, y: 4 },
-      { x: 0, y: 4 }
+      { x: -1, y: -2 },
+      { x: -2, y: -1 },
+      { x: -3, y: 0 },
+      { x: -4, y: 1 },
+      { x: -3, y: 2 },
+      { x: -2, y: 3 },
+      { x: -1, y: 3 },
     ];
 
-    const vPolygon = moaiSilhouette.map(({ x, y }) => {
-      let dot =  pen.windowToWiewport(windowSize, viewportSize, x, -y)
+
+    const vPolygon = diamond.map(({ x, y }) => {
+      let dot = { x, y }
+      dot = pen.scale(dot, 2);
       dot = pen.rotate(dot, 45 * Math.PI / 180);
-      dot = pen.translate(dot, 300, -200);
+      dot = pen.windowToWiewport(windowSize, viewportSize, dot.x, -dot.y)
       return dot;
     });
 

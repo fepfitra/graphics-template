@@ -149,6 +149,12 @@ class Pen {
     const y = dot.x * Math.sin(angle) + dot.y * Math.cos(angle);
     return { x, y }
   }
+
+  public scale(dot: { x: number, y: number }, scale:number) {
+    const x = dot.x * scale;
+    const y = dot.y * scale;
+    return { x, y }
+  }
 }
 
-export default Pen;
+export default Pen
